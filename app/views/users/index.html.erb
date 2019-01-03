@@ -1,0 +1,16 @@
+<% provide(:title, 'All users') %>
+<h1>All users</h1>
+
+<%= will_paginate @users %>
+
+<ul class="users">
+  <%= render @users %>
+  <!--この下の行と同義-->
+  <!--<% @users.each do |user| %>-->
+  <!--  <%= render user %>-->
+    <!--=> app/views/リソース名/_オブジェクト名.html.erb-->
+    <!--=> app/views/users/_user.html.erb-->
+  <!--<% end %>-->
+</ul>
+
+<%= will_paginate %>
