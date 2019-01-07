@@ -34,7 +34,7 @@ module SessionsHelper
       user = User.find_by(id:user_id)
       #cookiesにuser_idが入ってなかったら（nilの場合）↓の処理 
         #平文のremember_tokenとremember_digestをチェック
-      if user && user.authenticated?(cookies[:remember_token])
+      if user && user.authenticated?(:remember,cookies[:remember_token])
        
         log_in user
         #メモ化している

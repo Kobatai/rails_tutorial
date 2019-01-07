@@ -11,4 +11,9 @@ Rails.application.routes.draw do
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'
   resources :users
+  resources :account_activations,only:[:edit]
+  #edit_account_activation_url(activation_token)
+   #params[:id] <== activation_token(有効化トークン)
+   # => GET "/account_activations/params[:id]/edit"
+   #Controller: params[:id]
 end
