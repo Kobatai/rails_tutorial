@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'password_resets/new'
+
+  get 'password_resets/edit'
+
   get 'sessions/new'
 
   root 'static_pages#home'
@@ -16,4 +20,5 @@ Rails.application.routes.draw do
    #params[:id] <== activation_token(有効化トークン)
    # => GET "/account_activations/params[:id]/edit"
    #Controller: params[:id]
+  resources :password_resets,     only: [:new, :create, :edit, :update]
 end
