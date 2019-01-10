@@ -21,4 +21,5 @@ Rails.application.routes.draw do
    # => GET "/account_activations/params[:id]/edit"
    #Controller: params[:id]
   resources :password_resets,     only: [:new, :create, :edit, :update]
+  resources :microposts,          only: [:create, :destroy]
 end

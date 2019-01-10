@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_many :microposts, dependent: :destroy
   attr_accessor :remember_token, :activation_token,:reset_token
   #⬇︎更新と新規に登録するときに反応する
   before_save   :downcase_email
@@ -70,11 +71,19 @@ class User < ApplicationRecord
     UserMailer.password_reset(self).deliver_now
   end
   
-   # パスワード再設定の期限が切れている場合はtrueを返す
+  # パスワード再設定の期限が切れている場合はtrueを返す
   def password_reset_expired?
     reset_sent_at < 2.hours.ago
   end
   
+  # 試作feedの定義
+  # 完全な実装は14章の「ユーザーをフォローする」を参照
+  # current_user.feed
+  # current_user.id
+  # current_user.microposts
+  def feed
+    Micropost.where("user_id = ?",self.id)
+  end
   private 
     def downcase_email
       self.email = self.email.downcase

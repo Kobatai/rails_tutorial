@@ -12,7 +12,7 @@ class PasswordResetsController < ApplicationController
       @user.send_password_reset_email
       flash[:info] = "Email sent with password reset instructions"
       redirect_to root_url
-    else
+    elsera
       flash.now[:danger] = "Email address not found"
       render 'new'
     end
