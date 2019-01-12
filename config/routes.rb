@@ -14,7 +14,18 @@ Rails.application.routes.draw do
   get    '/login',   to: 'sessions#new'
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'
-  resources :users
+  
+  resources :users do
+    
+    member do
+      #/users/:id/...
+      #follwing_user GET    /users/:id/follwing(.:format)   users#follwing
+      #followers_user GET    /users/:id/followers(.:format) users#followers
+      get :following,:followers
+      #GET /users/1/following => following action
+      #GET /users/1/followers => followers action
+    end
+  end
   resources :account_activations,only:[:edit]
   #edit_account_activation_url(activation_token)
    #params[:id] <== activation_token(有効化トークン)
@@ -22,4 +33,5 @@ Rails.application.routes.draw do
    #Controller: params[:id]
   resources :password_resets,     only: [:new, :create, :edit, :update]
   resources :microposts,          only: [:create, :destroy]
+  resources :relationships,       only: [:create, :destroy]
 end

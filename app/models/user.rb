@@ -1,5 +1,25 @@
 class User < ApplicationRecord
   has_many :microposts, dependent: :destroy
+  has_many :active_relationships,
+    class_name:"Relationship",
+   foreign_key: :follower_id,
+   # foreign_key:"user_idがデフォルトになっている"
+     dependent: :destroy
+
+  # ↓@user.active_relationships.map(|r| r.followed)と同じことをしてる
+  has_many :passive_relationships,
+    class_name: 'Relationship',
+   foreign_key: :followed_id,
+     dependent: :destroy
+  
+  has_many :following,
+    through:'active_relationships',
+     source:'followed'
+     
+  has_many :followers,
+    through:'passive_relationships',
+     source:'follower'
+  
   attr_accessor :remember_token, :activation_token,:reset_token
   #⬇︎更新と新規に登録するときに反応する
   before_save   :downcase_email
@@ -76,14 +96,34 @@ class User < ApplicationRecord
     reset_sent_at < 2.hours.ago
   end
   
-  # 試作feedの定義
-  # 完全な実装は14章の「ユーザーをフォローする」を参照
+
   # current_user.feed
   # current_user.id
   # current_user.microposts
+  # ユーザーのステータスフィードを返す
   def feed
-    Micropost.where("user_id = ?",self.id)
+    following_ids = "SELECT followed_id FROM relationships
+                     WHERE follower_id = :user_id"
+    Micropost.where("user_id IN (#{following_ids})
+                     OR user_id = :user_id", user_id: self.id)
   end
+  #ユーザーをフォローする
+  def follow(other_user)
+    self.active_relationships.create(followed_id:other_user.id)
+  end
+  
+  
+  #ユーザーをフォロー解除する
+  def unfollow(other_user)
+    self.active_relationships.find_by(followed_id:other_user.id).destroy
+  end
+  
+  #現在のユーザーがフォローをしてたらtrueを返す
+  def following?(other_user)
+    self.following.include?(other_user)
+    # [1,2,3,4,5].include?(1) => ダックタイピング(配列の感覚で定義できる)
+  end
+  
   private 
     def downcase_email
       self.email = self.email.downcase

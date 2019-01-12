@@ -1,0 +1,11 @@
+<!--current_user-->
+<!--@user-->
+<!--既に@userに情報が入ってた場合-->
+<!--PATCH /relationships/:id-->
+<!--DELETE /relationships/:idにしてあげる-->
+
+<%= form_for(current_user.active_relationships.find_by(followed_id: @user.id),
+             html: { method: :delete },
+             remote: true) do |f| %>
+  <%= f.submit "Unfollow", class: "btn" %>
+<% end %>
